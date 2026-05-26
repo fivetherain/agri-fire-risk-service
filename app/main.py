@@ -11,8 +11,16 @@ from fastapi import Request
 from app.routers import land_plots
 from app.routers.fire_perimeters import router as fire_router
 from app.routers.exposure import router as exposure_router
+from app.core.exceptions import register_exception_handlers
+from app.core.logging import setup_logging
+from app.middleware.request_logging import RequestLoggingMiddleware
+
+setup_logging()
 
 app = FastAPI(title='Agri Fire Risk Service', version='0.1.0')
+
+app.add_middleware(RequestLoggingMiddleware)
+register_exception_handlers(app)
 
 app.include_router(land_plots.router, prefix="/v1/land_plots")
 app.include_router(fire_router, prefix="/v1/fire_perimeters")
