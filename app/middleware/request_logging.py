@@ -32,6 +32,6 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             duration_ms,
         )
 
-        response.headers["X-Process-Time-ms"] = f"{duration_ms: 2f}"
+        response.headers["X-Process-Time-ms"] = f"{duration_ms:.2f}"
 
         return response
