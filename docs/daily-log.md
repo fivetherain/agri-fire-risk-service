@@ -76,3 +76,29 @@ docs/
 Dockerfile
 docker-compose.yml
 README.md
+
+## Day8 - GeoJSON API + Leaflet Demo
+
+- Fixed FirePerimeter CRUD route bugs.
+- Added GeoJSON FeatureCollection endpoints for land plots and fire perimeters.
+- Added a Leaflet demo page served by FastAPI static files.
+- Loaded PostGIS polygon data into a browser map.
+- Prepared the project for the weekend visual demo.
+
+## Day9 - GeoJSON Demo Stabilization and Tests
+
+### What I built
+
+- Fixed Day8 GeoJSON endpoint bugs.
+- Fixed Leaflet demo JavaScript and CSS issues.
+- Added tests for land plot GeoJSON output.
+- Added tests for fire perimeter GeoJSON output.
+- Added a test for the static Leaflet demo page.
+
+### Key technical points
+
+- GeoJSON API should return FeatureCollection.
+- PostGIS geometry is converted with ST_AsGeoJSON.
+- Leaflet renders polygons with L.geoJSON().
+- FastAPI StaticFiles serves the demo page.
+- API shape should be protected with pytest.

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Agri Fire Exposure Demo</title>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+            header {
+                padding: 12px 16px;
+                border-bottom: 1px solid #ddd;
+            }
+            header h1 {
+                margin: 0;
+                font-size: 20px;
+            }
+            header p {
+                margin: 6px 0 0;
+                color: #555;
+                font-size: 14px;
+            }
+            #map {
+                height: calc(100vh - 70px);
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Agri Fire Exposure Demo</h1>
+            <p>Land plots and wildfire perimeters loaded from FastAPI + POSTGIS</p>
+        </header>
+        <div id="map"></div>
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            const map = L.map("map").setView([49.15, -123.05], 10);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                maxZoom: 19,
+                attribution: "&copy; OpenStreetMap contributors",
+            }).addTo(map);
+
+            const allLayers = [];
+
+            async function loadLandPlots() {
+                const response = await fetch("/v1/land_plots/geojson");
+                const data = await response.json();
+
+                const Layer = L.geoJSON(data, {
+                    style: { color: "#2E7D32", weight: 2, fillOpacity: 0.25 },
+                    onEachFeature: function(feature, layer) {
+                        const p = feature.properties;
+                        layer.bindPopup(`
+                        <strong>Land Plot</strong><br>
+                        PLOT ID: ${p.plot_id}<br>
+                        Crop: ${p.crop_type}<br>
+                        Area ha: ${p.area_ha}    
+                        `);
+                    },
+                }).addTo(map);
+
+                allLayers.push(layer);
+            }
+
+            async function loadFirePerimeters() {
+                const response = await fetch("/v1/fire_perimeters/geojson");
+                const data = await response.json();
+
+                const layer = L.geoJSON(data, {
+                    style: { color: "#C62828", weight: 2, fillOpacity: 0.35 },
+                    onEachFeature: function (feature, layer) {
+                    const p = feature.properties;
+                    layer.bindPopup(`
+                        <strong>Fire Perimeter</strong><br>
+                        Name: ${p.name}<br>
+                        Event ID: ${p.event_id}<br>
+                        Source: ${p.source}
+                    `);
+                    },
+                }).addTo(map);
+
+                allLayers.push(layer);
+            }
+
+            async function init() {
+                await loadLandPlots();
+                await loadFirePerimeters();
+
+                const group = L.featureGroup(allLayers);
+                if (allLayers.length > 0 && group.getBounds().isValid()) {
+                    map.fitBounds(group.getBounds(), { padding: [30, 30] });
+                }
+            }
+
+            init();
+        </script>
+    </body>
+</html>

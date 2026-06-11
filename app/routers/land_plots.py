@@ -74,6 +74,35 @@ def list_land_plots(db: Session = Depends(get_db)):
     return [_to_out(obj, geojson_text) for (obj, geojson_text) in rows]
 
 
+@router.get("/geojson")
+def list_land_plots_geojson(db: Session = Depends(get_db)):
+    rows = (
+        db.query(
+            LandPlot,
+            func.ST_AsGeoJSON(LandPlot.geom, 6).label("geom_geojson"),
+        )
+        .order_by(LandPlot.id.desc())
+        .all()
+    )
+
+    features = []
+    for obj,geom_geojson in rows:
+        features.append({
+            "type": "Feature",
+            "id": obj.id,
+            "geometry": json.loads(geom_geojson) if geom_geojson else None,
+            "properties": {
+                "plot_id": obj.plot_id,
+                "crop_type": obj.crop_type,
+                "area_ha": obj.area_ha,
+            },
+        })
+    
+    return {
+        "type": "FeatureCollection",
+        "features": features,
+    }
+
 @router.get("/{land_plot_id}", response_model=LandPlotOut)
 def get_land_plot(land_plot_id: int, db: Session = Depends(get_db)):
     row = (

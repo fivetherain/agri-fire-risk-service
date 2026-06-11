@@ -14,10 +14,13 @@ from app.routers.exposure import router as exposure_router
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import setup_logging
 from app.middleware.request_logging import RequestLoggingMiddleware
+from fastapi.staticfiles import StaticFiles
 
 setup_logging()
 
 app = FastAPI(title='Agri Fire Risk Service', version='0.1.0')
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(RequestLoggingMiddleware)
 register_exception_handlers(app)
