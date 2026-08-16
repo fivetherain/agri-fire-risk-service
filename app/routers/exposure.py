@@ -133,3 +133,22 @@ def exposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
         "fire_count": len(results),
         "items": results,
     }
+
+    @router.get("/plots/{plot_id}/geojson")
+    def exposure_for_plot_geoson(plot_id: int, db: Session = Depend(get_db)):
+        plot = db.query(LandPlot).filter(LandPlot.id == plot_id).first()
+
+        if not plot:
+            raise HTTPException(status_code=404, detial="LandPlot not found")
+
+        plot_area_m2 = (
+            db.query(func.ST_Area(cast(LandPlot.geom, Geography)))
+            .filter(LandPlot.id == plot_id)
+            .scalar()
+        )
+
+        rows = (
+            db.query(
+                
+            )
+        )

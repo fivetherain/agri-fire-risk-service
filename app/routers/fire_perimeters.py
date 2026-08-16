@@ -66,6 +66,7 @@ def list_fire_perimeters_geojson(db: Session = Depends(get_db)):
             "id": obj.id,
             "geometry": json.loads(geom_geojson) if geom_geojson else None,
             "properties": {
+                "id": obj.id,
                 "source": obj.source,
                 "event_id": obj.event_id,
                 "name": obj.name,
@@ -93,7 +94,7 @@ def get_fire_perimeter(fire_perimeter_id: int, db: Session = Depends(get_db)):
 
 @router.patch("/{fire_perimeter_id}", response_model=FirePerimeterOut)
 def update_fire_perimeter(fire_perimeter_id: int, payload: FirePerimeterUpdate, db: Session = Depends(get_db)):
-    obj = db.query(FirePerimeter).filter(FirePerimeter.id == perimeter_id).first()
+    obj = db.query(FirePerimeter).filter(FirePerimeter.id == fire_perimeter_id).first()
     if not obj:
         raise HTTPException(status_code=404, detail = "FirePerimetr not found")
 
@@ -120,7 +121,7 @@ def update_fire_perimeter(fire_perimeter_id: int, payload: FirePerimeterUpdate, 
 
 @router.delete("/{perimeter_id}")
 def delete_fire_perimeter(perimeter_id: int, db: Session = Depends(get_db)):
-    obj = db.query(FirePerimeter).filter(FirePerimeter.id == perimeter_id).first()
+    obj = db.query(FirePerimeter).filter(FirePerimeter.id == fire_perimeter_id).first()
     if not obj:
         raise HTTPException(status_code=404, detail = "FirePerimeter not found")
     db.delete(obj)

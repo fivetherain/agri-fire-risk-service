@@ -92,6 +92,7 @@ def list_land_plots_geojson(db: Session = Depends(get_db)):
             "id": obj.id,
             "geometry": json.loads(geom_geojson) if geom_geojson else None,
             "properties": {
+                "id": obj.id,
                 "plot_id": obj.plot_id,
                 "crop_type": obj.crop_type,
                 "area_ha": obj.area_ha,
