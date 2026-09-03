@@ -120,7 +120,7 @@ def update_fire_perimeter(fire_perimeter_id: int, payload: FirePerimeterUpdate, 
     }
 
 @router.delete("/{perimeter_id}")
-def delete_fire_perimeter(perimeter_id: int, db: Session = Depends(get_db)):
+def delete_fire_perimeter(fire_perimeter_id: int, db: Session = Depends(get_db)):
     obj = db.query(FirePerimeter).filter(FirePerimeter.id == fire_perimeter_id).first()
     if not obj:
         raise HTTPException(status_code=404, detail = "FirePerimeter not found")
