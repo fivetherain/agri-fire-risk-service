@@ -14,12 +14,12 @@ router = APIRouter(tags=["exposure"])
 
 
 @router.get("/plots/{plot_id}")
-def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
+def exposure_for_plot(plot_id: str, db: Session = Depends(get_db)):
     """
     Analyze wildfire exposure for one land plot.
 
     Business meaning:
-    - Input: one agricultural land plot ID
+    - Input: one agricultural land plot business ID (plot_id string)
     - Output: wildfire perimeters that intersect with this land plot
     - Calculate:
       1. plot area in square meters
@@ -27,8 +27,8 @@ def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
       3. exposure percentage
     """
 
-    # 1. Check whether the land plot exists.
-    plot = db.query(LandPlot).filter(LandPlot.id == plot_id).first()
+    # 1. Look up by business plot_id (string), not DB primary key.
+    plot = db.query(LandPlot).filter(LandPlot.plot_id == plot_id).first()
 
     if not plot:
         raise HTTPException(status_code=404, detail="LandPlot not found")
@@ -40,7 +40,7 @@ def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
     # - For PostGIS calculations, use LandPlot.geom instead of plot.geom.
     plot_area_m2 = (
         db.query(func.ST_Area(cast(LandPlot.geom, Geography)))
-        .filter(LandPlot.id == plot_id)
+        .filter(LandPlot.id == plot.id)
         .scalar()
     )
 
@@ -51,7 +51,7 @@ def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
             LandPlot,
             func.ST_Intersects(LandPlot.geom, FirePerimeter.geom),
         )
-        .filter(LandPlot.id == plot_id)
+        .filter(LandPlot.id == plot.id)
         .all()
     )
 
@@ -72,7 +72,7 @@ def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
                 )
             )
             .filter(
-                LandPlot.id == plot_id,
+                LandPlot.id == plot.id,
                 FirePerimeter.id == fire.id,
             )
             .scalar()
@@ -100,7 +100,7 @@ def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
                 )
             )
             .filter(
-                LandPlot.id == plot_id,
+                LandPlot.id == plot.id,
                 FirePerimeter.id == fire.id,
             )
             .scalar()
@@ -128,20 +128,21 @@ def eposure_for_plot(plot_id: int, db: Session = Depends(get_db)):
         )
 
     return {
-        "plot_id": plot_id,
+        "plot_id": plot.plot_id,
         "plot_area_m2": float(plot_area_m2 or 0.0),
         "fire_count": len(results),
         "items": results,
     }
 
+
 @router.get("/plots/{plot_id}/geojson")
-def exposure_for_geojson(
-    plot_id: int,
+def exposure_for_plot_geojson(
+    plot_id: str,
     db: Session = Depends(get_db),
 ):
-    #1. Confirm that requested land plot exists.
+    # 1. Look up by business plot_id (string), not DB primary key.
     plot = (
-        db.query(LandPlot).filter(LandPlot.id == plot_id)
+        db.query(LandPlot).filter(LandPlot.plot_id == plot_id)
         .first()
     )
 
@@ -150,26 +151,26 @@ def exposure_for_geojson(
             status_code=404,
             detail="LandPlot not found",
         )
-    #2. calculate the complete land plot area in squere meters.
+
+    # 2. Calculate the complete land plot area in square meters.
     plot_area_m2 = (
         db.query(
             func.ST_Area(
                 cast(LandPlot.geom, Geography)
             )
         )
-        .filter(LandPlot.id == plot_id)
+        .filter(LandPlot.id == plot.id)
         .scalar()
     )
 
-    #3. Fetch every intersecting fire and its overlap geometry.
-
+    # 3. Fetch every intersecting fire and its overlap geometry.
     intersection_expr = func.ST_Intersection(
         LandPlot.geom,
         FirePerimeter.geom,
     )
 
     intersection_area_expr = func.ST_Area(
-        cast(intersection_expr, Geometry)
+        cast(intersection_expr, Geography)
     )
 
     rows = (
@@ -188,16 +189,16 @@ def exposure_for_geojson(
         )
         .select_from(FirePerimeter)
         .join(
-            Landplot,
+            LandPlot,
             func.ST_Intersects(
                 LandPlot.geom,
                 FirePerimeter.geom,
             ),
         )
-        .filter(LandPlot.id == plot_id)
+        .filter(LandPlot.id == plot.id)
         .all()
     )
-    
+
     # 4. Convert the SQL rows into GeoJSON Features.
     features = []
 
@@ -223,7 +224,7 @@ def exposure_for_geojson(
                     else None
                 ),
                 "properties": {
-                    "plot_id": plot_id,
+                    "plot_id": plot.plot_id,
                     "fire_id": row.fire_id,
                     "source": row.source,
                     "event_id": row.event_id,
@@ -238,7 +239,7 @@ def exposure_for_geojson(
 
     return {
         "type": "FeatureCollection",
-        "plot_id": plot_id,
+        "plot_id": plot.plot_id,
         "plot_area_m2": float(plot_area_m2 or 0.0),
         "fire_count": len(features),
         "features": features,

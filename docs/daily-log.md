@@ -102,3 +102,13 @@ README.md
 - Leaflet renders polygons with L.geoJSON().
 - FastAPI StaticFiles serves the demo page.
 - API shape should be protected with pytest.
+
+
+### Day9 - Exposure GeoJSON and intergration tests
+
+- Fixed exposure GeoJSON query and geography area calculation.
+- Fixed FirePerimeter DELETE path parameter.
+- Added exposure GeoJSON intergration test.
+- Addded land plot, fire perimeter, static page and DELETE tests.
+- Verified GeoJSON FeatureCollection output.
+- Test results: 8 passed.
