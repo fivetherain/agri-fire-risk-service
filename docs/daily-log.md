@@ -104,7 +104,7 @@ README.md
 - API shape should be protected with pytest.
 
 
-### Day9 - Exposure GeoJSON and intergration tests
+## Day9 - Exposure GeoJSON and intergration tests
 
 - Fixed exposure GeoJSON query and geography area calculation.
 - Fixed FirePerimeter DELETE path parameter.
@@ -112,3 +112,13 @@ README.md
 - Addded land plot, fire perimeter, static page and DELETE tests.
 - Verified GeoJSON FeatureCollection output.
 - Test results: 8 passed.
+
+## Day10 - Interactive Exposure Map
+
+- Connected land-plot click events to the exposure GeoJSON API.
+- Added a highlighted intersection layer.
+- Added loading, empty, and error states.
+- Added an exposure summary panel and layer control.
+- Added a 404 integration test.
+- Expanded static-page contract assertions.
+- Test result: 9 passed.

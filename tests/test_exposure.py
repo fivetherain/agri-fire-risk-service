@@ -46,3 +46,18 @@ def test_exposure_geojson(client, exposure_seed):
     assert feature["properties"]["plot_id"] == plot.plot_id
     assert feature["properties"]["intersection_area_m2"] > 0
     assert feature["properties"]["intersection_pct"] > 0
+
+def test_exposure_geojson_plot_not_found(client):
+    response = client.get(
+        "/v1/exposure/plots/DOES_NOT_EXIST/geojson"
+    )
+
+    assert response.status_code == 404
+
+    data = response.json()
+
+    assert data["error"]["type"] == "http_error"
+    assert data["error"]["message"] == "LandPlot not found"
+    assert data["error"]["path"] == (
+        "/v1/exposure/plots/DOES_NOT_EXIST/geojson"
+    )

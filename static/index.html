@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Agri Fire Exposure Demo</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <style>
@@ -26,6 +27,55 @@
                 height: calc(100vh - 70px);
                 width: 100%;
             }
+            #exposure-panel {
+                position: absolute;
+                top: 82px;
+                right: 16px;
+                z-index: 1000;
+                width: min(320px, calc(100vw - 32px));
+                max-height: calc(100vh - 110px);
+                overflow-y: auto;
+                padding: 16px;
+                box-sizing: border-box;
+                background: #ffffff;
+                border: 1px solid #cfd8dc;
+                border-radius: 6px;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            }
+
+            #exposure-panel[hidden] {
+                display: none;
+            }
+
+            #exposure-panel h2 {
+                margin: 0 0 12px;
+                font-size: 18px;
+            }
+
+            #exposure-panel dl {
+                display: grid;
+                grid-template-columns: 110px 1fr;
+                gap: 6px 10px;
+                margin: 0 0 12px;
+            }
+
+            #exposure-panel dt {
+                color: #546e7a;
+            }
+
+            #exposure-panel dd {
+                margin: 0;
+                font-weight: 600;
+            }
+
+            #exposure-items {
+                margin: 8px 0 0;
+                padding-left: 20px;
+            }
+
+            #exposure-status {
+                color: #546e7a;
+            }
         </style>
     </head>
     <body>
@@ -34,6 +84,20 @@
             <p>Land plots and wildfire perimeters loaded from FastAPI + POSTGIS</p>
         </header>
         <div id="map"></div>
+        <aside id=""exposure-panel hidden aria-lice="polite">
+            <h2>wildfire Exposure</h2>
+            <dl>
+                <dt>Plot</dt>
+                <dd id="selected-plot">-</dd>
+                <dt>Plot area</dt>
+                <dd id="selected-plot-area">-</dd>
+                <dt>Fire count</dt>
+                <dd id="selected-fire-count">-</dd>
+            </dl>
+
+            <p id="exposure-status"></p>
+            <ul id="exposure-items"></ul>
+        </aside>
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
             const map = L.map("map").setView([49.15, -123.05], 10);
@@ -44,6 +108,18 @@
             }).addTo(map);
 
             const allLayers = [];
+
+            const exposureLayer = L.geoJSON(null,
+                {
+                    style: {
+                        color: '#F9A825',
+                        weight: 3,
+                        fillColor: "#FFD54F",
+                        fillOpacity: 0.55,
+                        dashArray: "6 4",
+                    },
+                }
+            ).addTo(map);
 
             async function loadLandPlots() {
                 const response = await fetch("/v1/land_plots/geojson");
@@ -59,10 +135,14 @@
                         Crop: ${p.crop_type}<br>
                         Area ha: ${p.area_ha}    
                         `);
+                        layer.on("click", function () {
+                            loadExposure(p.plot_id);
+                        });
                     },
                 }).addTo(map);
 
                 allLayers.push(Layer);
+                return Layer;
             }
 
             async function loadFirePerimeters() {
@@ -83,11 +163,118 @@
                 }).addTo(map);
 
                 allLayers.push(Layer);
+                return Layer;
             }
 
+            function renderExposurepanel(data) {
+                const panel = document.getElementById("EXPOSURE-PANEL");
+                const plotElement = document.getElementById("selected-plot");
+                const areaElement = document.getElementById("selected-plot-area");
+                const countElement = document.getElementById("selected-fire-count");
+                const statusElement = document.getElementById("exposure-status");
+                const itemsElement = document.getElementById("exposure-items");
+                
+                panel.hidden = false;
+                plotElement.textContent = data.plot_id;
+                areaElement.textContent = 
+                `${Number(data.plot_area_m2).toLocaleString()}m2`;
+                countElement.textContent = String(data.fire_count);
+
+                itemsElement.replaceChildren();
+
+                if (data.feature.length === 0) {
+                    statusElement.textContent = 
+                    "No overlapping wildfire perimeters.";
+                    return;
+                }
+
+                statusElement.textContent = "";
+
+                for (const feature of data.feature) {
+                    const properties = data.properties;
+                    const item = document.createElement("li");
+
+                    const fireName = 
+                    properties.name ||
+                    properties.event_id ||
+                    `Fire${properties.event_id}`;
+                    
+                    const area = Number(
+                        properties.intersection_area_m2 || 0
+                    );
+
+                    item.textContent = 
+                    `${fireName}: ${area.toLocaleString()}m2` +
+                    `(${percentage.toFixed(2)}%)`;
+
+                    itemsElement.appendChild(item);
+                }
+            }
+
+            async function loadExposure(plotId) {
+                const panel = document.getElementById("exposure-panel");
+                const statusElement =document.getElementById("exposure-status");
+                const itemsElement = document.getElementById('exposure-items');
+
+                panel.hidden = false;
+                statusElement.textContent = "Loading exposure...";
+                itemsElement.replaceChildren();
+                exposureLayer.clearLayers();
+
+                try {
+                    const encodePlotId = encodeURIComponent(plotId);
+                    const response = await fetch(
+                        `/v1/exposure/plot/${encodePlotId}/geojson`
+                    );
+
+                    if (!response.ok) {
+                        const errorBody = await response
+                            .json()
+                            .catch(() => null);
+                        const message =
+                            errorBody?.error?.message ||
+                            `Request failed (${response.status})`;
+
+                        throw new Error(message);
+                    }
+
+                    const data = await response.json();
+                    exposureLayer.addData(data);
+                    renderExposurepanel(data);
+
+                    if (
+                        data.features.length > 0 &&
+                        exposureLayer.getBounds().isValid()
+                    ) {
+                        exposureLayer.bringToFront();
+
+                        map.fitBounds(exposureLayer.getBounds(), {
+                            padding: [40, 40],
+                            maxZoom: 14,
+                        });
+                    }
+                    
+                } catch(error) {
+                    statusElement.textContent =
+                    `Unable to load exposure: ${error.message}`;
+            }
+        }
+
             async function init() {
-                await loadLandPlots();
-                await loadFirePerimeters();
+                const landLayer = await loadLandPlots();
+                const fireLayer = await loadFirePerimeters();
+
+                L.control.layers(
+                    null,
+                    {
+                        "Land plots": landLayer,
+                        "Fire perimeters": fireLayer,
+                        "Exposure overlap": exposureLayer, 
+                    },
+                    {
+                        collapse: false,
+                    }
+                ).addTo(map);
 
                 const group = L.featureGroup(allLayers);
                 if (allLayers.length > 0 && group.getBounds().isValid()) {
@@ -95,7 +282,9 @@
                 }
             }
 
-            init();
+            init().catch(function (error) {
+                console.error("Map initialization failed:", error);
+            });
         </script>
     </body>
 </html>

@@ -1,6 +1,5 @@
 # The main entry point for the Agri Fire Risk Service.
 from fastapi import FastAPI
-from fastapi.routing import APIRoute
 from sqlalchemy import text
 from app.db.session import engine
 from app.models.base import Base
