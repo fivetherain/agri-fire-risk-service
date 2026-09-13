@@ -122,3 +122,14 @@ README.md
 - Added a 404 integration test.
 - Expanded static-page contract assertions.
 - Test result: 9 passed.
+
+## Day11 - Interactive Map Stabilization
+
+- Fixed malformed exposure panel HTML.
+- Corrected Exposure GeoJSON API path.
+- Corrected GeoJSON features and properties access.
+- Added the missing exposure percentage variable.
+- Fixed Leaflet layer-control configuration.
+- Improved static-page regression assertions.
+- Verified land-plot click, exposure panel, and overlap layer.
+- Test result: write the real pytest result here.

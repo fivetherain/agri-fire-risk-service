@@ -16,4 +16,4 @@ FastAPI and PostGIS service for assessing wildfire exposure of agricultural land
 ```powershell
 docker compose up -d db
 poetry install
-poetry run uvicorn app.main: app --reload
+poetry run uvicorn app.main:app --reload

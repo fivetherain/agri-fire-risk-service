@@ -80,11 +80,11 @@
     </head>
     <body>
         <header>
-            <h1>Agri Fire Exposure Demo</h1>
+            <h1>Wildfire Exposure</h1>
             <p>Land plots and wildfire perimeters loaded from FastAPI + POSTGIS</p>
         </header>
         <div id="map"></div>
-        <aside id=""exposure-panel hidden aria-lice="polite">
+        <aside id="exposure-panel" hidden aria-live="polite">
             <h2>wildfire Exposure</h2>
             <dl>
                 <dt>Plot</dt>
@@ -125,7 +125,7 @@
                 const response = await fetch("/v1/land_plots/geojson");
                 const data = await response.json();
 
-                const Layer = L.geoJSON(data, {
+                const landLayer = L.geoJSON(data, {
                     style: { color: "#2E7D32", weight: 2, fillOpacity: 0.25 },
                     onEachFeature: function(feature, layer) {
                         const p = feature.properties;
@@ -141,15 +141,15 @@
                     },
                 }).addTo(map);
 
-                allLayers.push(Layer);
-                return Layer;
+                allLayers.push(landLayer);
+                return landLayer;
             }
 
             async function loadFirePerimeters() {
                 const response = await fetch("/v1/fire_perimeters/geojson");
                 const data = await response.json();
 
-                const Layer = L.geoJSON(data, {
+                const fireLayer = L.geoJSON(data, {
                     style: { color: "#C62828", weight: 2, fillOpacity: 0.35 },
                     onEachFeature: function (feature, layer) {
                     const p = feature.properties;
@@ -162,12 +162,12 @@
                     },
                 }).addTo(map);
 
-                allLayers.push(Layer);
-                return Layer;
+                allLayers.push(fireLayer);
+                return fireLayer;
             }
 
             function renderExposurepanel(data) {
-                const panel = document.getElementById("EXPOSURE-PANEL");
+                const panel = document.getElementById("exposure-panel");
                 const plotElement = document.getElementById("selected-plot");
                 const areaElement = document.getElementById("selected-plot-area");
                 const countElement = document.getElementById("selected-fire-count");
@@ -177,12 +177,16 @@
                 panel.hidden = false;
                 plotElement.textContent = data.plot_id;
                 areaElement.textContent = 
-                `${Number(data.plot_area_m2).toLocaleString()}m2`;
+                `${Number(data.plot_area_m2 || 0).toLocaleString()}m2`;
                 countElement.textContent = String(data.fire_count);
 
                 itemsElement.replaceChildren();
 
-                if (data.feature.length === 0) {
+                const features = Array.isArray(data.features)
+                    ? data.features
+                    : [];
+
+                if (features.length === 0) {
                     statusElement.textContent = 
                     "No overlapping wildfire perimeters.";
                     return;
@@ -190,17 +194,21 @@
 
                 statusElement.textContent = "";
 
-                for (const feature of data.feature) {
+                for (const feature of features) {
                     const properties = data.properties;
                     const item = document.createElement("li");
 
                     const fireName = 
-                    properties.name ||
-                    properties.event_id ||
-                    `Fire${properties.event_id}`;
+                        properties.name ||
+                        properties.event_id ||
+                        `Fire${properties.event_id}`;
                     
                     const area = Number(
                         properties.intersection_area_m2 || 0
+                    );
+
+                    const percentage = Number(
+                        properties.intersection_pct || 0
                     );
 
                     item.textContent = 
@@ -255,8 +263,12 @@
                     }
                     
                 } catch(error) {
+                    exposureLayer.clearLayers();
+
                     statusElement.textContent =
-                    `Unable to load exposure: ${error.message}`;
+                        `Unable to load exposure: ${error.message}`;
+
+                    console.error("Exposure request failed:", error);
             }
         }
 
@@ -272,7 +284,7 @@
                         "Exposure overlap": exposureLayer, 
                     },
                     {
-                        collapse: false,
+                        collapsed: false,
                     }
                 ).addTo(map);
 
