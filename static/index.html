@@ -76,6 +76,20 @@
             #exposure-status {
                 color: #546e7a;
             }
+
+            #map-status {
+                position: absolute;
+                top: 82px;
+                left: 50%;
+                z-index: 1000;
+                transform: translateX(-50%);
+                margin: 0;
+                padding: 10px 14px;
+                color: #b71c1c;
+                background: #ffffff;
+                border: 1px solid #ef9a9a;
+                border-radius: 4px;
+            }
         </style>
     </head>
     <body>
@@ -84,6 +98,7 @@
             <p>Land plots and wildfire perimeters loaded from FastAPI + POSTGIS</p>
         </header>
         <div id="map"></div>
+        <p id="map-status" hidden role="status" aria-live="polite"></p>
         <aside id="exposure-panel" hidden aria-live="polite">
             <h2>wildfire Exposure</h2>
             <dl>
@@ -121,9 +136,41 @@
                 }
             ).addTo(map);
 
+            async function fetchJson(url) {
+                const response = await fetch(url, 
+                    {
+                        header: {
+                            Accept: "application/json",
+                        },
+                    }
+                );
+
+                let body = null;
+
+                try {
+                    body = await response.json();
+                } catch (error) {
+                    body = null;
+                }
+
+                if (!response.ok) {
+                    const message = 
+                        body?.error?.message ||
+                        `Request failed (${response.status})`;
+
+                    throw new Error(message);
+                }
+
+                if (body === null) {
+                    throw new Error("Server returned an invalid JSON response.");
+                }
+
+
+                return body;
+            }
+
             async function loadLandPlots() {
-                const response = await fetch("/v1/land_plots/geojson");
-                const data = await response.json();
+                const data = await fetchJson("/v1/land_plots/geojson");
 
                 const landLayer = L.geoJSON(data, {
                     style: { color: "#2E7D32", weight: 2, fillOpacity: 0.25 },
@@ -146,8 +193,7 @@
             }
 
             async function loadFirePerimeters() {
-                const response = await fetch("/v1/fire_perimeters/geojson");
-                const data = await response.json();
+                const data = await fetchJson("/v1/fire_perimeters/geojson");
 
                 const fireLayer = L.geoJSON(data, {
                     style: { color: "#C62828", weight: 2, fillOpacity: 0.35 },
@@ -166,7 +212,7 @@
                 return fireLayer;
             }
 
-            function renderExposurepanel(data) {
+            function renderExposurePanel(data) {
                 const panel = document.getElementById("exposure-panel");
                 const plotElement = document.getElementById("selected-plot");
                 const areaElement = document.getElementById("selected-plot-area");
@@ -230,25 +276,11 @@
                 exposureLayer.clearLayers();
 
                 try {
-                    const encodePlotId = encodeURIComponent(plotId);
-                    const response = await fetch(
-                        `/v1/exposure/plot/${encodePlotId}/geojson`
-                    );
-
-                    if (!response.ok) {
-                        const errorBody = await response
-                            .json()
-                            .catch(() => null);
-                        const message =
-                            errorBody?.error?.message ||
-                            `Request failed (${response.status})`;
-
-                        throw new Error(message);
-                    }
-
-                    const data = await response.json();
+                    const encodedPlotId = encodeURIComponent(plotId);
+                    const data = await fetchJson(`/v1/exposure/plots/${encodedPlotId}/geojson`);
+                    
                     exposureLayer.addData(data);
-                    renderExposurepanel(data);
+                    renderExposurePanel(data);
 
                     if (
                         data.features.length > 0 &&
@@ -295,6 +327,10 @@
             }
 
             init().catch(function (error) {
+                const statusElement = document.getElementById("map-status");
+                statusElement.hidden = false;
+                statusElement.textContent =
+                    `Unable to load map data: ${error.message}`;
                 console.error("Map initialization failed:", error);
             });
         </script>

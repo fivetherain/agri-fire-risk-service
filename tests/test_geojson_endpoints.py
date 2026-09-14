@@ -58,10 +58,15 @@ def test_leaflet_demo_page(client):
     assert "data.features" in response.text
     assert "feature.properties" in response.text
     assert "collapsed: false" in response.text
-
     assert 'id=""exposure-panel' not in response.text
     assert "/v1/exposure/plot/${" not in response.text
     assert "data.feature.length" not in response.text
+    assert "async function fetchJson" in response.text
+    assert "response.ok" in response.text
+    assert "body?.error?.message" in response.text
+    assert "await fetchJson" in response.text
+    assert 'id="map-status"' in response.text
+    assert "renderExposurePanel(data)" in response.text
 
 def test_delete_fire_perimeter(client, exposure_seed):
     _, fire = exposure_seed

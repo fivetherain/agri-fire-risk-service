@@ -133,3 +133,13 @@ README.md
 - Improved static-page regression assertions.
 - Verified land-plot click, exposure panel, and overlap layer.
 - Test result: write the real pytest result here.
+
+## Day12 - Centralized Frontend API Error Handling
+
+- Added a reusable fetchJson helper.
+- Centralized HTTP and JSON error handling.
+- Reused the helper for land, fire, and exposure requests.
+- Fixed remaining Day11 route and property-access bugs.
+- Added a visible map initialization error state.
+- Expanded the static-page contract test.
+- Test result: write the actual pytest result here.
