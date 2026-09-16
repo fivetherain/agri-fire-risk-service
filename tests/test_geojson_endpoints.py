@@ -67,6 +67,7 @@ def test_leaflet_demo_page(client):
     assert "await fetchJson" in response.text
     assert 'id="map-status"' in response.text
     assert "renderExposurePanel(data)" in response.text
+    assert "headers:" in response.text
 
 def test_delete_fire_perimeter(client, exposure_seed):
     _, fire = exposure_seed

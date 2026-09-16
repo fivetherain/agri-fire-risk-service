@@ -143,3 +143,13 @@ README.md
 - Added a visible map initialization error state.
 - Expanded the static-page contract test.
 - Test result: write the actual pytest result here.
+
+## Day13 - Polygon WKT Input Validation
+
+- Added a reusable PolygonWKT Pydantic type.
+- Validated WKT syntax, Polygon type, empty geometry, topology, and coordinate bounds.
+- Added field constraints for land plots and fire perimeters.
+- Preserved the unified 422 validation-error response.
+- Added request-validation integration tests.
+- Fixed the Day12 Fetch API headers option.
+- Test result: replace this with the actual pytest result.
