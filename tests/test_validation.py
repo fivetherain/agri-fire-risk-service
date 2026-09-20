@@ -32,7 +32,8 @@ def assert_validation_error(response, field: str):
             "-123.10 49.20, -123.00 49.10, "
             "-123.10 49.10))"
         ),
-        "POLYGON(200 49, 201 49, 201 50, 200 50, 200 49)",
+        "POLYGON((200 49, 201 49, 201 50, 200 50, 200 49))",
+        "POLYGON((120 91, 121 91, 121 92, 120 92, 120 91))",
     ],
     ids=[
         "malformed-wkt",
@@ -40,6 +41,7 @@ def assert_validation_error(response, field: str):
         "empty-polygon",
         "self-intersection",
         "invalid-longtitude",
+        "invalid-latitude",
     ],
 )
 
@@ -77,10 +79,9 @@ def test_land_plot_update_rejects_point(
     plot, _ =exposure_seed
 
     response = client.patch(
-        f"v1/land_plots/{plot.id}",
+        f"/v1/land_plots/{plot.id}",
         json={"geom_wkt": "POINT(-123.05 49.15)"},
     )
-
     assert_validation_error(response, "geom_wkt")
 
 def test_land_plot_accepts_valid_polygon(client):
@@ -107,3 +108,16 @@ def test_land_plot_accepts_valid_polygon(client):
     finally:
         if create_id is not None:
             client.delete(f"/v1/land_plots/{create_id}")
+
+def test_fire_perimeter_reuses_polygon_validation(client):
+    response = client.post(
+        "/v1/fire_perimeters",
+        json={
+            "source": "CNFDB",
+            "event_id": "TEST_DAY14_INVALID_FIRE",
+            "name": "Invalid Geometry Fire",
+            "geom_wkt": "POINT(-123.05 49.15)",
+        },
+    )
+
+    assert_validation_error(response, "geom_wkt")

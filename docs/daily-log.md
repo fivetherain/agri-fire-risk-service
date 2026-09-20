@@ -153,3 +153,14 @@ README.md
 - Added request-validation integration tests.
 - Fixed the Day12 Fetch API headers option.
 - Test result: replace this with the actual pytest result.
+
+## Day14 - Query Efficiency and Transaction Safety\
+
+- Fixed Day13 coordinate-validation test gaps.
+- Fixed GeoJSON feature property access.
+- Removed exposure Cartesian-product query.
+- Reduced exposure queries from 3 + 3N to 3 SELECTS.
+- Removed the FirePerimeter list N + 1 query.
+- Added rollback handling for failed fire writes.
+- Added query-count and transaction-failure tests.
+- Test results:replace with actual result.

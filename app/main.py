@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from sqlalchemy import text
 from app.db.session import engine
 from app.models.base import Base
-from app.models.land_plot import LandPlot
-from app.models.fire_perimeter import FirePerimeter
+from app.models.land_plot import LandPlot # noqa: F401
+from app.models.fire_perimeter import FirePerimeter # noqa: 401
 from app.routers import land_plots
 from app.routers.fire_perimeters import router as fire_router
 from app.routers.exposure import router as exposure_router

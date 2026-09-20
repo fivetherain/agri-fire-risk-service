@@ -68,6 +68,8 @@ def test_leaflet_demo_page(client):
     assert 'id="map-status"' in response.text
     assert "renderExposurePanel(data)" in response.text
     assert "headers:" in response.text
+    assert "const properties = feature.properties;" in response.text
+    assert "const properties = data.properties;" not in response.text
 
 def test_delete_fire_perimeter(client, exposure_seed):
     _, fire = exposure_seed
