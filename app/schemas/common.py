@@ -4,6 +4,7 @@ from typing import Annotated
 from pydantic import AfterValidator
 from shapely import from_wkt
 from shapely.errors import GEOSException
+from shapely.validation import explain_validity
 
 def validate_polygon_wkt(value: str) -> str:
     candidate = value.strip()
@@ -25,8 +26,15 @@ def validate_polygon_wkt(value: str) -> str:
     if geometry.is_empty:
         raise ValueError("geom_wkt cannot be empty")
 
+    if geometry.has_z:
+        raise ValueError("geom_wkt must contain 2D coordinate")
+
     if not geometry.is_valid:
-        raise ValueError("geom_wkt must contain a valid topologically polygon")
+        reason = explain_validity(geometry)
+        raise ValueError(f"geom_wkt must be topologically valid: {reason}")
+    
+    if geometry.area <= 0:
+        raise ValueError("geom_wkt must hava a positive area")
 
     min_x, min_y, max_x, max_y = geometry.bounds
 

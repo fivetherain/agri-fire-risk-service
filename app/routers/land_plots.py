@@ -12,6 +12,7 @@ from geoalchemy2.elements import WKTElement
 from app.db.deps import get_db
 from app.models.land_plot import LandPlot
 from app.schemas.land_plot import LandPlotCreate, LandPlotOut, LandPlotUpdate
+from app.schemas.geojson import GeoJSONFeatureCollection
 
 router = APIRouter(tags=["land_plots"])
 
@@ -32,6 +33,10 @@ def _to_out(obj: LandPlot, geojson_text: str | None) -> dict:
         "geom_geojson": _geojson_or_none(geojson_text),
     }
 
+@router.get(
+    "/geojson",
+    response_model=GeoJSONFeatureCollection,
+)
 
 @router.post("", response_model=LandPlotOut, status_code=status.HTTP_201_CREATED)
 def create_land_plot(payload: LandPlotCreate, db: Session = Depends(get_db)):

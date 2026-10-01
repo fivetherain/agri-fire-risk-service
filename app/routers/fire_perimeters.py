@@ -19,6 +19,7 @@ from app.schemas.fire_perimeter import (
     FirePerimeterOut,
     FirePerimeterUpdate,
 )
+from app.schemas.geojson import GeoJSONFeatureCollection
 
 router = APIRouter(tags=["fire_perimeters"])
 
@@ -57,6 +58,11 @@ def _commit_or_500(db:Session) -> None:
             detail="Database operation failed",
         ) from exc
 
+@router.get(
+    "/geojson",
+    response_model=GeoJSONFeatureCollection,
+)
+
 @router.post(
     "",
     response_model=FirePerimeterOut,
@@ -71,7 +77,7 @@ def create_fire_perimeter(
         source=payload.source,
         event_id=payload.event_id,
         name=payload.name,
-        geom=geomWKTElement(
+        geom=WKTElement(
             payload.geom_wkt,
             srid=4326,
         ),
@@ -153,10 +159,10 @@ def list_fire_perimeters_geojson(
             }
         )
 
-        return {
-            "type": "FeatureCollection",
-            "features": features,
-        }
+    return {
+        "type": "FeatureCollection",
+        "features": features,
+    }
 
 @router.get(
     "/{fire_perimeter_id}",
@@ -182,7 +188,7 @@ def get_fire_perimeter(
     )
 
     if not row:
-        raise HTTPElement(
+        raise HTTPException(
             status_code=404,
             detail="FirePerimeter not found",
         )
@@ -218,6 +224,9 @@ def update_fire_perimeter(
         obj.source = payload.source
     
     if payload.event_id is not None:
+        obj.event_id = payload.event_id
+
+    if payload.name is not None:
         obj.name = payload.name
     
     if payload.geom_wkt is not None:
@@ -261,10 +270,10 @@ def delete_fire_perimeter(
             detail="Fireperimeter not found",
         )
 
-        db.delete(obj)
-        _commit_or_500(db)
+    db.delete(obj)
+    _commit_or_500(db)
 
-        return  {
-            "deleted": True,
-            "id": fire_perimeter_id,
-        }
+    return  {
+        "deleted": True,
+        "id": fire_perimeter_id,
+    }

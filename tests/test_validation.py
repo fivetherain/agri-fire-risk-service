@@ -1,6 +1,7 @@
 from uuid import uuid4
-
 import pytest
+from sqlalchemy import func
+from app.models.land_plot import LandPlot
 
 VALID_POLYGON = (
     "POLYGON((-123.10 49.10, -123.00 49.10, "
@@ -34,6 +35,20 @@ def assert_validation_error(response, field: str):
         ),
         "POLYGON((200 49, 201 49, 201 50, 200 50, 200 49))",
         "POLYGON((120 91, 121 91, 121 92, 120 92, 120 91))",
+        "MULTIPOLYGON((("
+            "-123.10 49.10, "
+            "-123.00 49.10, "
+            "-123.00 49.20, "
+            "-123.10 49.20, "
+            "-123.10 49.10"
+        ")))",
+        "POLYGON Z(("
+            "-123.10 49.10 1, "
+            "-123.00 49.10 1, "
+            "-123.00 49.20 1, "
+            "-123.10 49.20 1, "
+            "-123.10 49.10 1"
+        "))",
     ],
     ids=[
         "malformed-wkt",
@@ -42,6 +57,8 @@ def assert_validation_error(response, field: str):
         "self-intersection",
         "invalid-longtitude",
         "invalid-latitude",
+        "multipolygon-not-supported",
+        "three-dimensional-polygon",
     ],
 )
 
@@ -71,6 +88,48 @@ def test_land_plot_rejects_non_positive_area(client, area_ha):
     )
 
     assert_validation_error(response, "area_ha")
+
+def test_valid_polygon_is_stored_with_expected_spatial_contract(
+    client,
+    db
+):
+    create_id = None
+
+    try:
+        response = client.post(
+            "/v1/land_plots",
+            json={
+                "plot_id": f"TEST_SPATIAL_{uuid4().hex}",
+                "crop_type": "wheat",
+                "area_ha": 10.0,
+                "geom_wkt": VALID_POLYGON,
+            },
+        )
+
+        assert response.status_code == 201
+        create_id = response.json()["id"]
+
+        row = (
+            db.query(
+                func.ST_IsValid(LandPlot.geom),
+                func.ST_IsEmpty(LandPlot.geom),
+                func.ST_SRID(LandPlot.geom),
+                func.ST_GeometryType(LandPlot.geom),
+            )
+            .filter(LandPlot.id == create_id)
+            .one()
+        )
+
+        assert row[0] is True
+        assert row[1] is False
+        assert row[2] == 4326
+        assert row[3] =="ST_Polygon"
+
+    finnaly:
+        if create_id is not None:
+            client.delete(
+                f"/v1/land_plots/{create_id}"
+            )
 
 def test_land_plot_update_rejects_point(
     client,

@@ -1,0 +1,380 @@
+NFDB Agency Polygon Data Update Log:
+
+Refer to metadata for more complete information - https://cwfis.cfs.nrcan.gc.ca/downloads/nfdb/fire_poly/current_version/
+
+
+June 2025 (published Dec 2, 2025)
+NFDB_poly_20250630 version released
+
+Due to file size, the data is delivered in multiple files 
+NFDB_poly_1972to2020_20250630.shp
+NFDB_poly_1921to2024_20250630.shp
+and NFDB_poly_1972to2024_20250630_large_fires.shp
+
+Version notes regarding data updates and sources:
+
+BC:
+- BC fire data updates downloaded from DataBC website https://catalogue.data.gov.bc.ca/;
+- This version of NFDB poly includes BC polys for 1917-2024;
+- 2021-2024 updates added in this update;
+- Note that all years include small fires (< 200 ha); Most years > 2002 include fires > 0.1 ha; Most years 1950-2002 include fires > 10 ha;
+- The BC fire perimeter data is published by the BC Ministry of Forests, Lands and Natural Resource Operations - BC Wildfire Service Licensed under Open Government License - British Columbia -- https://www2.gov.bc.ca/gov/content/data/policy-standards/data-policies/open-data/open-government-licence-bc
+
+AB:
+- AB fire data updates provided by https://www.alberta.ca/alberta-wildfire
+- This version of NFDB poly includes AB polys for 1931-2024;
+- 2021-2024 updates added in this update.
+- Note that most years include small fires (< 200 ha); Most years > 1997 include fires > 0.1 ha; Most years 1950-1997 include fires > 10 ha; Most years < 1950 include fires > 100 ha.
+
+SK:
+- SK fire data updates provided by agency;
+- This version of NFDB poly includes SK polys for 1945-2024;
+- Missing years: 1951, 1954, 1965;
+- 2021-2024 updates added in this update;
+- Note that most years > 1995 include fires > 50 ha; Most years < 1996 include large fires only (> 200 ha); Most years < 1980 include large fires > 1000 ha.
+
+MB:
+- MB fire data updates provided by agency;
+- This version of NFDB poly includes MB polys for 1928-2024;
+- 2021-2024 updates added in this update;
+- Note that most years include small fires (< 200 ha); Most years > 1997 include fires > 0.1 ha; Most years 1981-1997 include large fires only (>200 ha); Most years 1928-1980 include fires > 40 ha.
+- Note: missing attributes (i.e. fireid, rep_date etc) for several years (1998-2003; and years < 1980) polys for small fires < 150ha missing for several years between 1980-1997;
+
+ON:
+- ON fire data updates downloaded from Ontario LIO website https://geohub.lio.gov.on.ca/
+- This version of NFDB poly includes ON polys for 1963-2024;
+- Missing years: 1959-1962, 1967, 1985;
+- 2021-2024 updates added in this update;
+- Note that ON fire polygons include fires only greater than 40 hectares; Years > 1997 include fires > 40 ha; Years 1963-1997 include large fires only (> 200 ha);
+- Note that the Ontario fire data has been produced by Natural Resources Canada under Licence with the Ontario Ministry of Natural Resources © Queen’s Printer for Ontario, 2024.
+
+QC:
+- QC fire data updates downloaded from https://www.donneesquebec.ca
+- This version of NFDB poly includes QC polys for 1972-2024;
+- 2021-2024 updates added in this update;
+- Note that years > 1993 include fires > 10 ha; Years 1973-1993 include fires > 100 ha;
+- The Quebec open data licence agreement is available here https://www.donneesquebec.ca/licence/
+
+NS:
+- NS fire data updates provided by agency;
+- This version of NFDB poly includes NS polys for 1976-2024;
+- 2021-2024 updates added in this update;
+- Missing years: 1959-1975, 1977-1979, 1981-1983, 1985-1986, 1988-1989, 1993-1996, 2002, 2005, 2010;
+- Note that years > 2010 include fires > 0.1 ha; Years 1976-2010 vary in what data is included.
+
+NB:
+- No polygon data updates provided by NB for this version release;
+- This version of NFDB poly includes NB polys for 1980-2013, 2024;
+- 2024 updates added in this update;
+- Missing years: 1959-1979, 1989, 1994-1995, 1997-2006, 2008, 2011-2012, 2014-2023;
+- Note that years > 1997 are mostly unavailable; Years < 1996 includes mostly small number of large fires.
+
+NL:
+- No polygon data updates provided by NL for this version release;
+- This version of NFDB poly includes NL polys for 1980-2016;
+- Missing years; 1959-1979, 2008, 2015, 2017-2024;
+- Note that most years include large fires only (> 200 ha)
+
+PE:
+- Fire data updates provided by agency;
+- This version of NFDB poly includes PEI polys for 2024 only;
+
+YT:
+- YT fire data updates provided by agency for this version release;
+- This version of NFDB poly includes YT polys for 1946-2024;
+- 2021-2024 updates added in this update
+- Missing years: 1964, 1970;
+- Note that most years > 1997 include small fires (< 100 ha); Most years 1946-1996 include fires > 100 ha.
+
+NT:
+- NWT fire data updates provided by agency for this version release;
+- This version of NFDB poly includes NWT polys for 1965-2024;
+- 2021-2024 updates added in this update;
+- Note that all years include small fires (< 200 ha); Most years > 2001 include fires > 0.1 ha;
+
+PC:
+- No fire data updates were provided by Parks Canada for this version release;
+- This version of NFDB poly includes Parks polys for 1923-2024,
+- 2016-2017; 2021-2024 updates added in this update;
+- Missing years; 2018-2020
+
+
+
+
+
+
+
+
+
+
+July 2021
+NFDB_poly_20210707 version released
+This version includes the following agency updates:
+
+
+BC:
+- BC fire data updates downloaded from DataBC website http://apps.gov.bc.ca;
+- This version of NFDB poly includes BC polys for 1917-2020;
+- 2020 updates added in this update;
+- Note that all years include small fires (< 200 ha); Most years > 2002 include fires > 0.1 ha; Most years 1950-2002 include fires > 10 ha;
+- The BC fire perimeter data is published by the BC Ministry of Forests, Lands and Natural Resource Operations - BC Wildfire Service Licensed under Open Government License - British Columbia -- http://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/databc/opendata/open-government-license-bc
+
+AB:
+- AB fire data updates downloaded from Alberta Wildfire website https://wildfire.alberta.ca/resources/historical-data/spatial-wildfire-data.aspx
+- This version of NFDB poly includes AB polys for 1931-2020;
+- Missing years: 1937;
+- 2020 updates added in this update.
+- Note that most years include small fires (< 200 ha); Most years > 1997 include fires > 0.1 ha; Most years 1950-1997 include fires > 10 ha; Most years < 1950 include fires > 100 ha.
+
+SK:
+- SK fire data updates provided by agency;
+- This version of NFDB poly includes SK polys for 1945-2020;
+- Missing years: 1951, 1954, 1965;
+- 2020 updates added in this update;
+- Note that most years > 1995 include fires > 50 ha; Most years < 1996 include large fires only (> 200 ha); Most years < 1980 include large fires > 1000 ha.
+
+MB:
+- MB fire data updates provided by agency;
+- This version of NFDB poly includes MB polys for 1928-2020;
+- 2020 updates added in this update;
+- Note that most years include small fires (< 200 ha); Most years > 1997 include fires > 0.1 ha; Most years 1981-1997 include large fires only (>200 ha); Most years 1928-1980 include fires > 40 ha.
+- Note: missing attributes (i.e. fireid, rep_date etc) for several years (1998-2003; and years < 1980) polys for small fires < 150ha missing for several years between 1980-1997;
+
+ON:
+- ON fire data updates downloaded from Ontario LIO website https://www.javacoeapp.lrc.gov.on.ca/geonetwork/srv/en/main.home
+- This version of NFDB poly includes ON polys for 1963-2020;
+- Missing years: 1959-1962, 1967, 1985;
+- 2020 updates added in this update;
+- Note that ON fire polygons include fires only greater than 40 hectares; Years > 1997 include fires > 40 ha; Years 1963-1997 include large fires only (> 200 ha);
+- Note that the Ontario fire data has been produced by Natural Resources Canada under Licence with the Ontario Ministry of Natural Resources © Queen’s Printer for Ontario, 2021.
+
+QC:
+- QC fire data updates downloaded from https://www.donneesquebec.ca
+- This version of NFDB poly includes QC polys for 1972-2020;
+- 2020 updates added in this update;
+- Note that years > 1993 include fires > 10 ha; Years 1973-1993 include fires > 100 ha;
+- The Quebec open data licence agreement is available here https://www.donneesquebec.ca/fr/licence/#cc-by
+
+NS:
+- NS fire data updates provided by agency;
+- This version of NFDB poly includes NS polys for 1976-2020;
+- 2020 updates added in this update;
+- Missing years: 1959-1975, 1977-1979, 1981-1983, 1985-1986, 1988-1989, 1993-1996, 2002, 2005, 2010;
+- Note that years > 2010 include fires > 0.1 ha; Years 1976-2010 vary in what data is included.
+
+NB:
+- No polygon data updates provided by NB for this version release;
+- This version of NFDB poly includes NB polys for 1980-2013;
+- Missing years: 1959-1979, 1989, 1994-1995, 1997-2006, 2008, 2011-2012, 2014-2020;
+- Note that years > 1997 are mostly unavailable; Years < 1996 includes mostly small number of large fires.
+
+NL:
+- No polygon data updates provided by NL for this version release;
+- This version of NFDB poly includes NL polys for 1980-2016;
+- Missing years; 1959-1979, 2008, 2015, 2017-2020;
+- Note that most years include large fires only (> 200 ha)
+
+PEI:
+- There are no fire polygon data for PEI in the NFDB
+
+YT:
+- YT fire data updates provided by agency for this version release;
+- This version of NFDB poly includes YT polys for 1946-2020;
+- 2020 updates added in this update
+- Missing years: 1964, 1970;
+- Note that most years > 1997 include small fires (< 100 ha); Most years 1946-1996 include fires > 100 ha.
+
+NT:
+- NWT fire data updates provided by agency for this version release;
+- This version of NFDB poly includes NWT polys for 1965-2020;
+- Fire polygon updates were made available for years 1986-2020 in this update;
+- Note that all years include small fires (< 200 ha); Most years > 2001 include fires > 0.1 ha;
+
+PC:
+- No fire data updates were provided by Parks Canada for this version release;
+- This version of NFDB poly includes Parks polys for 1923-2015,
+
+
+
+
+
+***************************************************************************************************
+
+October 5th, 2020
+NFDB_poly_20201005 version update released
+This version includes modification to the QC data only. QC data for years <2003 have been reverted back to the NFDB version released in 2019 as there were missing fires identified in the source data updates added in the 20200811 release.
+All other data remains unchanged from previous verions (20200811)
+
+Aug 11th, 2020
+NFDB_poly_20200811 version update released
+This version includes the 2019 fires added to NS data:
+NS:
+- This version of NFDB poly includes NS polys for 1976-2019;
+- Missing years: 1959-1975, 1977-1979, 1981-1983, 1985-1986, 1988-1989, 1993-1996, 2002, 2005, 2010;
+- Note that years > 2010 include fires > 0.1 ha; Years 1976-2010 vary in what data is included.
+
+July 11th, 2020
+NFDB_poly_20200711 version released
+This version includes the following agency updates:
+
+BC:
+- BC fire data updates downloaded from DataBC website http://apps.gov.bc.ca;
+- This version of NFDB poly includes BC polys for 1917-2019;
+- 2019 updates added in this update;
+- Note that all years include small fires (< 200 ha); Most years > 2002 include fires > 0.1 ha; Most years 1950-2002 include fires > 10 ha;
+- The BC fire perimeter data is published by the BC Ministry of Forests, Lands and Natural Resource Operations - BC Wildfire Service Licensed under Open Government License - British Columbia -- http://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/databc/opendata/open-government-license-bc
+
+AB:
+- AB fire data updates downloaded from Alberta Wildfire website https://wildfire.alberta.ca/resources/historical-data/spatial-wildfire-data.aspx
+- This version of NFDB poly includes AB polys for 1931-2019;
+- Missing years: 1937;
+- 2018 and 2019 updates added in this update.
+- Note that most years include small fires (< 200 ha); Most years > 1997 include fires > 0.1 ha; Most years 1950-1997 include fires > 10 ha; Most years < 1950 include fires > 100 ha.
+
+SK:
+- SK fire data updates provided by agency;
+- This version of NFDB poly includes SK polys for 1945-2019;
+- Missing years: 1951, 1954, 1965;
+- 2019 updates added in this update;
+- Note that most years > 1995 include fires > 50 ha; Most years < 1996 include large fires only (> 200 ha); Most years < 1980 include large fires > 1000 ha.
+
+MB:
+- MB fire data updates provided by agency;
+- This version of NFDB poly includes MB polys for 1928-2019;
+- 2019 updates added in this update;
+- Note that most years include small fires (< 200 ha); Most years > 1997 include fires > 0.1 ha; Most years 1981-1997 include large fires only (>200 ha); Most years 1928-1980 include fires > 40 ha.
+- Note: missing attributes (i.e. fireid, rep_date etc) for several years (1998-2003; and years < 1980) polys for small fires < 150ha missing for several years between 1980-1997;
+
+ON:
+- ON fire data updates downloaded from Ontario LIO website https://www.javacoeapp.lrc.gov.on.ca/geonetwork/srv/en/main.home
+- This version of NFDB poly includes ON polys for 1963-2019;
+- Missing years: 1959-1962, 1967, 1985;
+- 2019 updates added in this update;
+- Note that ON fire polygons include fires only greater than 40 hectares; Years > 1997 include fires > 40 ha; Years 1963-1997 include large fires only (> 200 ha);
+- Note that the Ontario fire data has been produced by Natural Resources Canada under Licence with the Ontario Ministry of Natural Resources © Queen’s Printer for Ontario, 2019.
+
+QC:
+- QC fire data updates downloaded from https://www.donneesquebec.ca
+- This version of NFDB poly includes QC polys for 1972-2019;
+- All historical fire records updated in this version;
+- Note that years > 1993 include fires > 10 ha; Years 1973-1993 include fires > 100 ha;
+- The Quebec open data licence agreement is available here https://www.donneesquebec.ca/fr/licence/#cc-by
+
+NS:
+- No polygon data updates provided by NS for this version release;
+- This version of NFDB poly includes NS polys for 1976-2018;
+- Missing years: 1959-1975, 1977-1979, 1981-1983, 1985-1986, 1988-1989, 1993-1996, 2002, 2005, 2010, 2019;
+- Note that years > 2010 include fires > 0.1 ha; Years 1976-2010 vary in what data is included.
+
+NB:
+- No polygon data updates provided by NB for this version release;
+- This version of NFDB poly includes NB polys for 1980-2013;
+- Missing years: 1959-1979, 1989, 1994-1995, 1997-2006, 2008, 2011-2012, 2014-2019;
+- Note that years > 1997 are mostly unavailable; Years < 1996 includes mostly small number of large fires.
+
+NL:
+- No polygon data updates provided by NL for this version release;
+- This version of NFDB poly includes NL polys for 1980-2016;
+- Missing years; 1959-1979, 2008, 2015, 2017-2019;
+- Note that most years include large fires only (> 200 ha)
+
+PEI:
+- There is no data for PEI in the NFDB
+
+YT:
+- YT fire data updates provided by agency for this version release;
+- This version of NFDB poly includes YT polys for 1946-2019;
+- Missing years: 1964, 1970;
+- 2019 updates added in this update
+- Note that most years > 1997 include small fires (< 100 ha); Most years 1946-1996 include fires > 100 ha.
+
+NT:
+- NWT fire data updates provided by agency for this version release;
+- This version of NFDB poly includes NWT polys for 1965-2019;
+- 2019 updates added in this update;
+- Note that all years include small fires (< 200 ha); Most years > 2001 include fires > 0.1 ha;
+
+PC:
+- No fire data updates were provided by Parks Canada for this version release;
+- This version of NFDB poly includes Parks polys for 1923-2015,
+
+
+
+
+
+June 7th, 2019
+NFDB_poly_20190607 version released
+
+This version includes the following agency updates:
+
+BC:
+- BC fire data updates downloaded from DataBC website https://data.gov.bc.ca;
+- 2018 BC fire polygon data updates were added to this version;
+- This version includes BC fire polygon data for years 1917-2018;
+- The BC fire perimeter data is published by the BC Ministry of Forests, Lands and Natural Resource Operations - BC Wildfire Service Licensed under Open Government License - British Columbia - http://www2.gov.bc.ca/gov/content/governments/about-the-bc-government/databc/opendata/open-government-license-bc
+
+AB:
+- AB fire polygon data updates downloaded from Alberta Wildfire website https://wildfire.alberta.ca/resources/historical-data/spatial-wildfire-data.aspx
+- 2018 AB fire polygon data updates were added to this version;
+- This version includes AB fire polygon data for years 1931-2018;
+
+SK:
+- SK fire data updates provided by agency;
+- 2018 SK fire polygon data updates were added to this version;
+- This version includes SK fire polygon data for years 1945-2018;
+
+MB:
+- MB fire data updates obtained from Manitoba Conservation Fire Program;
+- 2018 MB fire polygon data updates were added to this version;
+- This version includes MB fire polygon data for years 1928-2018;
+- Note: missing attributes for several years (i.e. years <1980 & 1998-2003), and polys for small fires (< 150ha) missing for several years between 1980-1997;
+
+ON:
+- ON fire data updates downloaded from Ontario LIO website https://www.javacoeapp.lrc.gov.on.ca/geonetwork/srv/en/main.home;
+- 2018 ON fire polygon data updates were added to this version;
+- This version includes ON fire polygon data for years 1963-2018;
+- Note that ON fire polygons include fires only greater than 40 hectares;
+- Note that the Ontario fire data has been produced by Natural Resources Canada under Licence with the Ontario Ministry of Natural Resources © Queen’s Printer for Ontario, 2019.
+
+QC:
+- QC fire data updates downloaded from https://www.donneesquebec.ca
+- 2018 QC fire polygon data updates were added to this version;
+- This version includes QC fire polygon data for years 1973-2018;
+- The Quebec open data licence agreement is available here https://www.donneesquebec.ca/fr/licence/#cc-by
+
+NS:
+- NS fire data updates provided by agency;
+- 2018 NS fire polygon data updates were added to this version;
+- This version includes NS fire polygon data for years 1976-2018;
+
+NB:
+- No polygon data updates available for NB for this NFDB poly version update;
+- This version includes NB fire polygon data for years 1980-2013;
+
+NL:
+- No polygon data updates available for NL for this NFDB poly version update;
+- This version includes NL fire polygon data for years 1980-2016;
+
+PEI
+- Data collected from agency and is being assessed before being included.
+
+YT:
+- YT fire data updates downloaded from Yukon Wildland Fire Management website http://www.community.gov.yk.ca/firemanagement/wfarchives.html
+- 2018 YT fire polygon data updates were added to this version;
+- This version includes YT fire polygon data for years 1946-2018;
+
+NT:
+- NWT fire data updates provided by agency;
+- 2018 NT fire polygon data updates were added to this version;
+- This version includes NT fire polygon data for years 1965-2018;
+
+PC:
+- No polygon data updates available for PC for this NFDB poly version update;
+- This version includes PC fire polygon data for years 1923-2015;
+- For fire polygons within parks refer to the National Burned Area Composite - http://cwfis.cfs.nrcan.gc.ca/datamart/metadata/nbac
+
+GENERAL_VERSION_NOTES:
+
+
+
+* Refer to Metadata for more detailed information - http://cwfis.cfs.nrcan.gc.ca/downloads/nfdb/fire_poly/current_version/

@@ -61,3 +61,25 @@ def test_exposure_geojson_plot_not_found(client):
     assert data["error"]["path"] == (
         "/v1/exposure/plots/DOES_NOT_EXIST/geojson"
     )
+
+def test_exposure_openapi_uses_response_model(client):
+    response = client.get("/openapi.json")
+
+    assert response.status_code == 200
+
+    schema = response.json()
+
+    success_schema = (
+        schema["path"]
+        ["/v1/exposure/plots/{plot_id}"]
+        ["get"]
+        ["response"]
+        ["200"]
+        ["content"]
+        ["application/json"]
+        ["schema"]
+    )
+
+    assert success_schema["$ref"] ==(
+        "#components/schema/ExposureResponse"
+    )

@@ -66,4 +66,4 @@ def test_exposure_query_count_is_constant(
         )
 
     assert response.status_code == 200
-    assert count_selects(statements) == 3
+    assert count_selects(statements) == 2

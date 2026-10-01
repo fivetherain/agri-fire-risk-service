@@ -1,6 +1,6 @@
 #Daily log
 
-##Day1 2026.02.28
+##Day1
 -Postgis in Docker running + postgis extension enabled
 -FastAPI running (/docs, /health)
 -models: LandPlot, FirePerimeter
@@ -164,3 +164,25 @@ README.md
 - Added rollback handling for failed fire writes.
 - Added query-count and transaction-failure tests.
 - Test results:replace with actual result.
+
+## Day 15-A - Pre-ETL Backend Completion
+
+- Repaired FirePerimeter CRUD regressions.
+- Moved exposure SQL into a service layer.
+- Reduced exposure analysis to two SELECT queries.
+- Added Pydantic exposure and GeoJSON response models.
+- Clarified the EPSG:4326 Polygon input contract.
+- Added persisted PostGIS geometry assertions.
+- Marked the historical no-index benchmark as invalid.
+- Ruff: 填实际结果
+- Pytest: 填实际结果
+
+## Day 15-B - First Real CNFDB Import
+
+- Added GeoPandas and Pyogrio.
+- Inspected a real CNFDB wildfire polygon dataset.
+- Recorded its schema, CRS, geometry types, and bounds.
+- Mapped CNFDB fields to the internal schema.
+- Reprojected the sample to EPSG:4326.
+- Loaded 填实际数量 polygons into PostGIS.
+- Verified geometry type, SRID, and validity.

@@ -2,6 +2,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Any
 from app.schemas.common import PolygonWKT
+from app.schemas.geojson import GeoJSONGeometry
 
 class LandPlotCreate(BaseModel):
     plot_id: str = Field(
@@ -22,7 +23,10 @@ class LandPlotCreate(BaseModel):
     geom_wkt: PolygonWKT= Field(
         ...,
         examples=["POLYGON((120.123456 30.123456, 120.123457 30.123457, 120.123458 30.123458, 120.123456 30.123456))"]
-    )
+        description=(
+            "2D Polygon WKT using EPSG:4326 "
+            "longitude/latitude coordinates."
+        ),
 
 class LandPlotUpdate(BaseModel):
     crop_type: Optional[str] = Field(
@@ -39,7 +43,7 @@ class LandPlotOut(BaseModel):
     area_ha: Optional[float] = None
 
     # output to frontend in GeoJSON format
-    geom_geojson: Any
+    geom_geojson: GeoJSONGeometry | None
 
     class Config:
         from_attributes = True
