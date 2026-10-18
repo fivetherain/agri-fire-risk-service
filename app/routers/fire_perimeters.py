@@ -58,11 +58,6 @@ def _commit_or_500(db:Session) -> None:
             detail="Database operation failed",
         ) from exc
 
-@router.get(
-    "/geojson",
-    response_model=GeoJSONFeatureCollection,
-)
-
 @router.post(
     "",
     response_model=FirePerimeterOut,
@@ -124,7 +119,10 @@ def list_fire_perimeters(
         for obj, geojson_text in rows
     ]
 
-@router.get("/geojson")
+@router.get(
+    "/geojson",
+    response_model=GeoJSONFeatureCollection,
+)
 def list_fire_perimeters_geojson(
     db: Session = Depends(get_db),
 ):
@@ -140,7 +138,7 @@ def list_fire_perimeters_geojson(
         .all()
     )
 
-    feature = []
+    features = []
 
     for obj, geom_geojson in rows:
         features.append(

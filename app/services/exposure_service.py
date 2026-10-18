@@ -11,7 +11,7 @@ from app.schemas.exposure import ExposureItem, ExposureResponse
 class LandPlotNotFoundError(Exception):
     pass
 
-def _json_or_none(value: str | None): -> dict | None:
+def _json_or_none(value: str | None) -> dict | None:
     if not value:
         return None
 
@@ -29,7 +29,7 @@ def analyze_plot_exposure(
                 cast(LandPlot.geom, Geography)
             ).label("plot_area_m2"),
         )
-        .filter(LandPlot.plot_id == id)
+        .filter(LandPlot.plot_id == plot_id)
         .first()
     )
 
@@ -94,7 +94,7 @@ def analyze_plot_exposure(
 
         items.append(
             ExposureItem(
-                Fire_id=row.fire_id,
+                fire_id=row.fire_id,
                 source=row.source,
                 event_id=row.event_id,
                 name=row.name,
@@ -112,6 +112,6 @@ def analyze_plot_exposure(
     return ExposureResponse(
         plot_id=plot_row.plot_id,
         plot_area_m2=plot_area_m2,
-        fire_count=len(item),
+        fire_count=len(items),
         items=items,
     )

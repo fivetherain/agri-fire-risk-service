@@ -6,4 +6,5 @@ __pycache__/
 .ruff_cache/
 .DS_Store
 Thumbs.db
-data/row/
+data/raw/
+data/processed/

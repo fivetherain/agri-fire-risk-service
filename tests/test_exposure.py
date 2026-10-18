@@ -70,10 +70,10 @@ def test_exposure_openapi_uses_response_model(client):
     schema = response.json()
 
     success_schema = (
-        schema["path"]
+        schema["paths"]
         ["/v1/exposure/plots/{plot_id}"]
         ["get"]
-        ["response"]
+        ["responses"]
         ["200"]
         ["content"]
         ["application/json"]
@@ -81,5 +81,5 @@ def test_exposure_openapi_uses_response_model(client):
     )
 
     assert success_schema["$ref"] ==(
-        "#components/schema/ExposureResponse"
+        "#/components/schemas/ExposureResponse"
     )

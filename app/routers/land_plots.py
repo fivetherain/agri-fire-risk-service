@@ -33,11 +33,6 @@ def _to_out(obj: LandPlot, geojson_text: str | None) -> dict:
         "geom_geojson": _geojson_or_none(geojson_text),
     }
 
-@router.get(
-    "/geojson",
-    response_model=GeoJSONFeatureCollection,
-)
-
 @router.post("", response_model=LandPlotOut, status_code=status.HTTP_201_CREATED)
 def create_land_plot(payload: LandPlotCreate, db: Session = Depends(get_db)):
     # WKT -> geometry(SRID=4326)
@@ -79,7 +74,10 @@ def list_land_plots(db: Session = Depends(get_db)):
     return [_to_out(obj, geojson_text) for (obj, geojson_text) in rows]
 
 
-@router.get("/geojson")
+@router.get(
+    "/geojson",
+    response_model=GeoJSONFeatureCollection,
+)
 def list_land_plots_geojson(db: Session = Depends(get_db)):
     rows = (
         db.query(

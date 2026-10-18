@@ -34,11 +34,11 @@ def parse_args():
 
 # Data inspection
 def inspect_dataset(gdf: gpd.GeoDataFrame) -> None:
-    print(f"rows: (len(gdf))")
+    print(f"rows: {len(gdf)}")
     print(f"column: {list(gdf.columns)}")
     print(f"source CRS: {gdf.crs}")
-    print(f"geometry type:")
-    print(f"gdf.geom_type.value_counts(dropna=False)")
+    print("geometry types:")
+    print(gdf.geom_type.value_counts(dropna=False))
     print(f"bounds: {gdf.total_bounds}")
 
     preview_columns = [
@@ -69,26 +69,26 @@ def build_load_frame(
     if gdf.crs is None:
         raise ValueError("Source dataset has no CRS")
 
-    projected = gdf.to_crs(4326)
+    projected = gdf.to_crs(epsg=4326)
 
     compatible = projected.loc[
         projected.geometry.notna()
         & ~projected.geometry.is_empty
-        & projected.geometry.eq("Polygon")
+        & projected.geom_type.eq("Polygon")
     ].head(limit).copy()
 
-    noramlized = gpd.GeoDataFrame(
+    normalized = gpd.GeoDataFrame(
         {
             "source": [SOURCE_NAME] * len(compatible),
             "event_id": (
-                compatible["Fire_ID"].astype("string").str.strip().to_numpy()
+                compatible["FIRE_ID"].astype("string").str.strip().to_numpy()
             ),
             "name": (
                 compatible["FIRENAME"].astype("string").str.strip().to_numpy()
             ),
         },
         geometry=compatible.geometry.to_numpy(),
-        crs=copmpatible.crs,
+        crs=compatible.crs,
     )
 
     return normalized.rename_geometry("geom")
@@ -116,14 +116,14 @@ def main() -> None:
     if not args.input.exists():
         raise FileNotFoundError(f"Input file does not exist: {args.input}")
     
-    gdf = gdp.read_file(args.input, engine="pyogrio")
+    gdf = gpd.read_file(args.input, engine="pyogrio")
 
     inspect_dataset(gdf)
 
-    noramlized = build_load_frame(gdf, args.limit)
+    normalized = build_load_frame(gdf, args.limit)
 
     print(f"rows prepared: {len(normalized)}")
-    print(f"target CRS: {noramlized.crs}")
+    print(f"target CRS: {normalized.crs}")
 
     print(
         normalized[
@@ -138,8 +138,8 @@ def main() -> None:
         )
         return
 
-    load_to_postgis(noramlized)
+    load_to_postgis(normalized)
     print(f"rows loaded: {len(normalized)}")
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     main()

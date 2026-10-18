@@ -40,5 +40,4 @@ class ExposureGeoJSONResponse(BaseModel):
     plot_id: str
     plot_area_m2: float
     fire_count: int
-    feature: list[ExposureGeoJSONFeature]
-    
+    features: list[ExposureGeoJSONFeature]

@@ -1,10 +1,4 @@
-from sqlalchemy import func, cast
-from geoalchemy2.types import Geography
-
 from app.db.deps import get_db
-from app.models.land_plot import LandPlot
-from app.models.fire_perimeter import FirePerimeter
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -35,7 +29,7 @@ def _analyze_or_404(
         ) from exc
 
 
-@router.get("/plots/{plot_id}")
+@router.get("/plots/{plot_id}", response_model=ExposureResponse,)
 def exposure_for_plot(plot_id: str, db: Session = Depends(get_db)):
     """
     Analyze wildfire exposure for one land plot.
@@ -46,14 +40,17 @@ def exposure_for_plot(plot_id: str, db: Session = Depends(get_db)):
     return _analyze_or_404(db, plot_id)
 
 
-@router.get("/plots/{plot_id}/geojson")
+@router.get(
+    "/plots/{plot_id}/geojson",
+    response_model=ExposureGeoJSONResponse,
+    )
 def exposure_for_plot_geojson(
     plot_id: str,
     db: Session = Depends(get_db),
 ):
     analysis = _analyze_or_404(db, plot_id)
 
-    feature = [
+    features = [
         ExposureGeoJSONFeature(
             id=item.fire_id,
             geometry=item.intersection_geom_geojson,

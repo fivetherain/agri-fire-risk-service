@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Optional, Any
+from typing import Optional
 from app.schemas.common import PolygonWKT
+from app.schemas.geojson import GeoJSONGeometry
 
 class FirePerimeterCreate(BaseModel):
     source: str = Field(
@@ -23,7 +24,7 @@ class FirePerimeterCreate(BaseModel):
         )
     geom_wkt: PolygonWKT = Field(
         ...,
-        examples=["POLYGON((120.123456 30.123456, 120.123457 30.123457, 120.123458 30.123458, 120.123456 30.123456))"]
+        examples=["POLYGON((120.123456 30.123456, 120.123457 30.123457, 120.123458 30.123458, 120.123456 30.123456))"],
         description=(
             "2D Polygon WKT using EPSG:4326 "
             "longitude/latitude coordinates."
@@ -53,4 +54,4 @@ class FirePerimeterOut(BaseModel):
     source: str
     event_id: Optional[str] = None
     name: Optional[str] = None
-    geom_geojson: Any
+    geom_geojson: GeoJSONGeometry | None

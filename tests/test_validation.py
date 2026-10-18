@@ -125,7 +125,7 @@ def test_valid_polygon_is_stored_with_expected_spatial_contract(
         assert row[2] == 4326
         assert row[3] =="ST_Polygon"
 
-    finnaly:
+    finally:
         if create_id is not None:
             client.delete(
                 f"/v1/land_plots/{create_id}"
