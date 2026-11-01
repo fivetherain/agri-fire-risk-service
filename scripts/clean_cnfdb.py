@@ -34,7 +34,7 @@ def parse_args():
         "--report",
         type=Path,
         default=Path(
-            "doc/data/cnfdb_cleaning_report.json"
+            "docs/data/cnfdb_cleaning_report.json"
         ),
     )
 
@@ -127,7 +127,7 @@ def clean_cnfdb(
     ] = working.loc[
         invalid_mask,
         "geometry",
-    ]
+    ].make_valid()
         
     working["geometry"] = (
         working.geometry.map(to_multipolygon)
@@ -197,6 +197,8 @@ def clean_cnfdb(
         missing_event_mask | invalid_area_mask
     )
 
+    attribute_rejected = int(reject_mask.sum())
+
     normalized = normalized.loc[
         ~reject_mask
     ].copy()
@@ -251,8 +253,7 @@ def clean_cnfdb(
         null_geometry
         + empty_geometry
         + unsupported_geometry
-        + missing_event_id
-        + invalid_area
+        + attribute_rejected
     )
 
     report = {

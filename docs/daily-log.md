@@ -186,3 +186,12 @@ README.md
 - Reprojected the sample to EPSG:4326.
 - Loaded 填实际数量 polygons into PostGIS.
 - Verified geometry type, SRID, and validity.
+
+## Day17 - Idempotent CNFDB ETL
+
+- Added a composite business key using event_id and source.
+- Added a PostgreSQL UPSERT for wildfire perimeter records.
+-Classified input rows as inserted, upodated, skipped or rejected.
+- Used ST_Equals to avoid unnecessary geometry updates.
+- Added controled source replacement inside one transaction.
+- Verified that a second identical load created no duplicated.
