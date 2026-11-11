@@ -42,6 +42,13 @@ def parse_args():
         ),
     )
 
+    parser.add_argument(
+        "--report",
+        type=Path,
+        default=None,
+        help="Optional path for the JSON load report.",
+    )
+
     return parser.parse_args()
 
 def required_text(
@@ -104,7 +111,7 @@ def read_input(
     input_path: Path,
 ) -> gpd.GeoDataFrame:
     if not input_path.exists():
-        raise FireNotFoundError(
+        raise FileNotFoundError(
             f"Input file does not exist: {input_path}"
         )
 
@@ -207,7 +214,7 @@ def find_existing(
         FirePerimeter.event_id == event_id,
     )
 
-    return db.execute(statement).one_or_none()
+    return db.execute(statement).mappings().one_or_none()
 
 def same_float(
     existing: float | None,
@@ -219,8 +226,8 @@ def same_float(
     return math.isclose(
         float(existing),
         float(incoming),
-        rel_tol=le-9,
-        abs_tol=le-6,
+        rel_tol=1e-9,
+        abs_tol=1e-6,
     )
 
 def is_unchanged(
@@ -228,7 +235,7 @@ def is_unchanged(
     values: dict[str, Any],
 ) -> bool:
     return (
-        existing["name"] == value["name"]
+        existing["name"] == values["name"]
         and existing["year"] == values["year"]
         and same_float(
             existing["area_ha"],
@@ -326,6 +333,12 @@ def load_frame(
         for values in prepared_rows
     }
 
+    if replace_source and len(sources) != 1:
+        raise ValueError(
+            "--replace-source requires exactly "
+            "one source in the input"
+        )
+
     if replace_source and rejected > 0:
         raise ValueError(
             "--replace-source refused because"
@@ -384,12 +397,13 @@ def load_frame(
     )
 
     return {
+        "method": "row_by_row",
         "rows_read": len(frame),
         "inserted": inserted,
         "updated": updated,
         "skipped": skipped,
         "rejected": rejected,
-        "delected_before_reload": deleted,
+        "deleted_before_reload": deleted,
         "duration_seconds": round(
             duration_seconds,
             3,
@@ -402,6 +416,20 @@ def load_frame(
 def main() -> None:
     args = parse_args()
 
+    if args.report is not None:
+        args.report.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+         args.report.write_text(
+            json.dumps(
+                report,
+                indent=2,
+                ensure_ascii=False,
+            ),
+            encoding="utf-8",
+        )
     frame = read_input(args.input)
 
     with SessionLocal() as db:

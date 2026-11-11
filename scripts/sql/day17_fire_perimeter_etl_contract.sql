@@ -17,15 +17,15 @@ ALTER TABLE fire_perimeters
 
 DO $$
 BEGIN
-    IF NOT EXIST(
+    IF NOT EXISTS (
         SELECT 1
         FROM pg_constraint
         WHERE conname = 
-            `uq_fire_perimeter_source_event_id`
+            'uq_fire_perimeter_source_event_id'
             AND conrelid = 
-                'fire_perimeter'::regclass
+                'fire_perimeters'::regclass
     ) THEN
-        ALTER TABLE fire_perimeter
+        ALTER TABLE fire_perimeters
             ADD CONSTRAINT
                 uq_fire_perimeters_source_event_id
             UNIQUE (source, event_id);
@@ -43,7 +43,7 @@ BEGIN
             AND conrelid = 
                 'fire_perimeters'::regclass
     ) THEN
-        ALTER TABLE fire_perimeter
+        ALTER TABLE fire_perimeters
             ADD CONSTRAINT
                 ck_fire_perimeters_polygonal
             CHECK (

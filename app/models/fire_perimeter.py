@@ -22,7 +22,7 @@ class FirePerimeter(Base):
             name="uq_fire_perimeters_source_event_id",
         ),
         CheckConstraint(
-            "ST_GeometryType(geom) IN"
+            "ST_GeometryType(geom) IN "
             "('ST_Polygon', 'ST_MultiPolygon')",
             name="ck_fire_perimeters_polygonal",
         ),

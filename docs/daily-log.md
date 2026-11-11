@@ -195,3 +195,18 @@ README.md
 - Used ST_Equals to avoid unnecessary geometry updates.
 - Added controled source replacement inside one transaction.
 - Verified that a second identical load created no duplicated.
+
+## Day 18 - PostgreSQL COPY Benchmark
+
+- Repaired the Day 17 idempotent-loading baseline.
+- Added COPY FROM STDIN loading into a temporary staging table.
+- Added set-based inserted, updated, and skipped classification.
+- Added a set-based PostgreSQL UPSERT.
+- Compared row-by-row loading with COPY loading.
+- Dataset rows: 18,426
+- Row-by-row duration: fill actual result
+- COPY duration: fill actual result
+- Measured speedup: fill actual result
+- Second COPY run skipped: fill actual result
+- Ruff: fill actual result
+- Pytest: fill actual result
